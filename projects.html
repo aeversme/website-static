@@ -62,6 +62,31 @@
     <div class="row row-cols-1 row-cols-xl-3 row-cols-lg-2">
       <div class="col mb-4">
         <div class="card h-100">
+            <img src="static/img/proj/proj-skyboy.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h3 class="card-title">Event-Driven Python</h3>
+                <p class="card-text text-muted status">
+                    Status: MVP, deployed
+                </p>
+                <p class="card-text">FPV quadcopter post-flight telemetry visualization tool. Streamlit, Python,
+                    Docker, ECS. Deployed on AWS with modular Terraform configuration. Branch-based GitHub Actions for
+                    CI/CD.
+                </p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <small class="text-muted">
+                    <button type="button" class="btn custom btn-proj" data-toggle="modal" data-target="#skyboyModal">
+                        More Info
+                    </button>
+                    <a class="btn custom-outline btn-proj" href="https://github.com/aeversme/skyboy-app"
+                       target="_blank">
+                        <i class="fas fa-code-branch"></i> GitHub</a>
+                </small>
+            </div>
+        </div>
+      </div>
+      <div class="col mb-4">
+        <div class="card h-100">
             <img src="static/img/proj/proj-etl.jpg" class="card-img-top" alt="...">
             <div class="card-body">
                 <h3 class="card-title">Event-Driven Python</h3>
@@ -90,7 +115,7 @@
             <div class="card-body">
                 <h3 class="card-title">Portfolio Webapp</h3>
                 <p class="card-text text-muted status">
-                    Status: complete, deployed
+                    Status: refactored as static site
                 </p>
                 <p class="card-text">Responsive Bootstrap CSS front end, Flask backend with authentication, relational
                     database, and more. Deployed on AWS with Elastic Beanstalk. GitHub Actions for CI/CD.
@@ -163,6 +188,62 @@
 </div>
 
 <!-- Modals -->
+<div class="modal fade" id="skyboyModal" tabindex="-1" aria-labelledby="skyboyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="skyboyModalLabel">Skyboy App</h3>
+            </div>
+            <div class="modal-body">
+                <h5>An FPV quadcopter post-flight telemetry visualization tool</h5>
+                <p>
+                    <ul>
+                        <li>Python, Streamlit</li>
+                        <li>Docker, ECR, ECS</li>
+                        <li>Terraform, Terraform Cloud</li>
+                        <li>Git, GitHub, Github Actions</li>
+                    </ul>
+                </p>
+                <p>Streamlit application, authored in Python, that transforms an uploaded CSV file and displays flight
+                    metrics, a map with a flight path trace, and graphs of relevant sets of data. The app and its
+                    dependencies are packaged as a Docker image, uploaded to Amazon Elastic Container Registry, and
+                    launched serverlessly using AWS Fargate.</p>
+                <p>The Terraform configuration for this project is modularized, and several files are provided as
+                    templates for manipulation within GitHub Actions. The primary Actions (both for building and
+                    uploading the app's Docker image, and for deploying the app's infrastructure) are reusable, and can
+                    be called from either the dev of main branches of the repository.</p>
+                <p>Some of the challenges I solved during development:</p>
+                <p>
+                    <ul>
+                        <li>Many of Streamlit's abstracted integrations (for example, plotly) are easy to work with,
+                            but I found adding a map with a trace of the quadcopter's GPS flight path to be rather
+                            difficult. After a lot of trial and error, I determined the format that the flight path map
+                            layer needed and added a transform to the Pandas dataframe to aggregate the appropriate
+                            columns.</li>
+                        <li>Keeping the Mapbox API key secret took me down several rabbit holes, because the Streamlit
+                            app looks for that key in a .toml file. Since TOML is a markup language and not a scripting
+                            language, I couldn't simply pass the key in as an environment variable. My solution was to
+                            create the necessary config file as an early step in the GitHub Action, using the 'sed'
+                            command, before building the Docker image.</li>
+                        <li>I set up two separate AWS accounts within an organization for this app: one account for
+                            development and testing, and one for production. I wanted a way to deploy to the correct
+                            account depending on which branch of the repository was being used, so that I didn't end up
+                            with multiple infrastructures within one account. After testing each action in the dev
+                            account, I refactored them to be reusable with certain required secrets and parameters.
+                            These reusable Action scripts are called by smaller, branch- and path-dependent Actions.</li>
+                    </ul>
+                </p>
+                <p>To-dos include: checks and conditionals for different CSV column headings, to accommodate
+                    different radio/flight controller combinations; automated unit-testing; ability for users to
+                    register/authenticate and upload telemetry files to S3.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn custom" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="pythonetlModal" tabindex="-1" aria-labelledby="pythonetlModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -177,7 +258,7 @@
                         <li>Lambda, DynamoDB, SNS, EC2</li>
                         <li>Terraform, Terraform Cloud</li>
                         <li>Git, GitHub, Github Actions</li>
-                        <li>Amazon Web Services, Redash</li>
+                        <li>Redash</li>
                     </ul>
                 </p>
                 <p>An AWS Lambda function, authored in Python and using boto3 to interact with other AWS resources,
@@ -220,6 +301,10 @@
                 <h3 class="modal-title" id="portfolioModalLabel">Portfolio Website</h3>
             </div>
             <div class="modal-body">
+                <i>NB: this application has been refactored into a static website to save costs and is no longer
+                    deployed on Elastic Beanstalk. The source code can still be found in
+                    <a href="href=https://github.com/aeversme/portfolio-webapp" target="_blank">this GitHub repository.</a></i>
+                <p>
                 <h5>A Flask web application with Bootstrap CSS</h5>
                 <p>
                     <ul>
@@ -238,7 +323,7 @@
                     framework with which I had little experience; and figuring out the deployment process, which
                     included using the AWS EB CLI tool locally, associating the application with a MySQL RDS instance,
                     and setting up a GitHub CI/CD pipeline to automatically push changes to Elastic Beanstalk.</p>
-                <p>Numerous challenges presented themselves throughout the development process. Some examples:</p>
+                <p>Examples of the many challenges this application presented me:</p>
                 <p>
                     <ul>
                         <li>Proper form validation: I decided not to use wtf.quick_form() to create the various HTML

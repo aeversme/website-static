@@ -5,7 +5,3 @@ application and deployed to AWS via Elastic Beanstalk. To reduce costs, I have r
 simpler version going forward.
 
 The repository for the original webapp can be found [here](https://github.com/aeversme/portfolio-webapp).
-
-Todo:
-* Automate deployment based on pushes to the repository
-* Set up Cloudfront and an automated invalidation when changes are pushed
