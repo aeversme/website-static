@@ -1,5 +1,7 @@
 # Profile Website (static)
 
+Website: [alexeversmeyer.com](https://alexeversmeyer.com)
+
 This is the static version of my portfolio website for deployment to AWS S3. The original site is based around a Flask 
 application and deployed to AWS via Elastic Beanstalk. To reduce costs, I have refactored the HTML and will deploy this
 simpler version going forward.
